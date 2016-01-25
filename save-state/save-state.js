@@ -22,12 +22,15 @@ window.SaveState = window.SaveState || {};
 				window.localStorage.removeItem(key);
 			}
 		}
+		SaveState.clear.called = true;
 	};
 
 	function addSaverBeforeLeavePage(name, value) {
 		var oldHandler = window.onbeforeunload;
 		window.onbeforeunload = function () {
-			window.localStorage.setItem(PREFIX + name, serialize(value));
+			if (!SaveState.clear.called) {
+				window.localStorage.setItem(PREFIX + name, serialize(value));
+			}
 			if (oldHandler) {
 				oldHandler();
 			}
